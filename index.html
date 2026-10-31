@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IMG_7b9e4a2f.png</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><rect width='16' height='16' fill='%23000'/></svg>">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html, body {
+            width: 100%;
+            height: 100%;
+            background-color: #000000;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        a {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            text-decoration: none;
+            outline: none;
+            cursor: default;
+        }
+        img {
+            max-width: 100vw;
+            max-height: 100vh;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            display: block;
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+    </style>
+</head>
+<body>
+    <a id="image-link" href="#" target="_blank" rel="noopener noreferrer">
+        <img id="display-image" src="assets/Industrialisation History.png" alt="IMG_7b9e4a2f.png">
+    </a>
+
+    <script>
+        (function() {
+            // Curated list of slides with unique random image IDs ending in .png
+            const slides = [
+                { index: 0,  id: "7b9e4a2f", name: "IMG_7b9e4a2f.png", file: "assets/Industrialisation History.png" },
+                { index: 1,  id: "a1f8c3d5", name: "IMG_a1f8c3d5.png", file: "assets/Industrialisation History (1).png" },
+                { index: 2,  id: "e6d2b489", name: "IMG_e6d2b489.png", file: "assets/Industrialisation History (2).png" },
+                { index: 3,  id: "3c9a7f10", name: "IMG_3c9a7f10.png", file: "assets/Industrialisation History (3).png" },
+                { index: 4,  id: "84e1b7c2", name: "IMG_84e1b7c2.png", file: "assets/Industrialisation History (4).png" },
+                { index: 5,  id: "2f0d9c4e", name: "IMG_2f0d9c4e.png", file: "assets/Industrialisation History (5).png" },
+                { index: 6,  id: "d5a83e71", name: "IMG_d5a83e71.png", file: "assets/Industrialisation History (6).png" },
+                { index: 7,  id: "91c4b2e8", name: "IMG_91c4b2e8.png", file: "assets/Industrialisation History (7).png" },
+                { index: 8,  id: "4e7f10d9", name: "IMG_4e7f10d9.png", file: "assets/Industrialisation History (8).png" },
+                { index: 9,  id: "b3d82a6c", name: "IMG_b3d82a6c.png", file: "assets/Industrialisation History (9).png" },
+                { index: 10, id: "f0c94e82", name: "IMG_f0c94e82.png", file: "assets/Industrialisation History (10).png" }
+            ];
+
+            const imgEl = document.getElementById('display-image');
+            const linkEl = document.getElementById('image-link');
+
+            // Parse URL parameters and hash
+            const urlParams = new URLSearchParams(window.location.search);
+            const hash = window.location.hash.replace('#', '').trim();
+
+            let queryVal = urlParams.get('id') || 
+                           urlParams.get('img') || 
+                           urlParams.get('file') || 
+                           urlParams.get('p') || 
+                           urlParams.get('page') || 
+                           urlParams.get('photo');
+
+            // Check if query is just "?1", "?IMG_a1f8c3d5.png", or similar
+            if (!queryVal) {
+                const rawSearch = window.location.search.replace('?', '').trim();
+                if (rawSearch) {
+                    queryVal = rawSearch;
+                }
+            }
+
+            // Fallback to hash #...
+            if (!queryVal && hash) {
+                queryVal = hash;
+            }
+
+            // Clean query input
+            let normalized = (queryVal || "").trim().toLowerCase();
+            normalized = normalized.replace(/\.png$/i, '');
+            if (normalized.startsWith('img_')) {
+                normalized = normalized.substring(4);
+            }
+
+            // Match slide by ID, index, or filename
+            let activeSlide = slides[0]; // default cover
+
+            if (queryVal) {
+                const found = slides.find(s => 
+                    s.id.toLowerCase() === normalized ||
+                    s.name.toLowerCase() === (queryVal || "").toLowerCase() ||
+                    s.index.toString() === queryVal ||
+                    s.file.toLowerCase().includes(queryVal.toLowerCase())
+                );
+                if (found) {
+                    activeSlide = found;
+                } else if (!isNaN(queryVal)) {
+                    const idx = parseInt(queryVal, 10);
+                    if (idx >= 0 && idx < slides.length) {
+                        activeSlide = slides[idx];
+                    }
+                }
+            }
+
+            // Update DOM image & title
+            imgEl.src = activeSlide.file;
+            imgEl.alt = activeSlide.name;
+            document.title = activeSlide.name;
+
+            // Set the blank link target href to the image URL with random id
+            const customLink = urlParams.get('link') || urlParams.get('url');
+            if (customLink) {
+                linkEl.href = customLink;
+            } else {
+                linkEl.href = activeSlide.file + "?id=" + activeSlide.name;
+            }
+
+            // Update browser URL address bar to look like a genuine .png image link
+            try {
+                const cleanQuery = "?id=" + activeSlide.name;
+                if (window.location.search !== cleanQuery && window.location.protocol.startsWith('http')) {
+                    window.history.replaceState(null, activeSlide.name, window.location.pathname + cleanQuery);
+                }
+            } catch (err) {
+                // Silently ignore when testing on local file:// protocol
+            }
+        })();
+    </script>
+</body>
+</html>
